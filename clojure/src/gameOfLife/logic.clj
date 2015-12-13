@@ -12,7 +12,7 @@
 
 (def ^:const neighbourOffsets
   [(vec2 -1 -1) (vec2 0 -1) (vec2 1 -1)
-   (vec2 -1  0)             (vec2 1  0) 
+   (vec2 -1  0)             (vec2 1  0)
    (vec2 -1  1) (vec2 0  1) (vec2 1  1)])
 
 (defn is-alive?
@@ -33,7 +33,6 @@
   "Returns a list of booleans representing the living state of the 8
   neighbours of a given cell"
   [world point]
-  (map neighbourOffsets)
   (map (partial is-alive? world) (neighbour-coords point)))
 
 (defn count-alive-neighbours
