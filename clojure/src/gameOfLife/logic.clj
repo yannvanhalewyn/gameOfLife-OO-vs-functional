@@ -1,25 +1,46 @@
 (ns gameOfLife.logic)
 
+(defn vec2
+  "Returns a vector with :x and :y coords"
+  [x y]
+  {:x x :y y})
+
+(defn addVec2
+  "Adds two 2d vectors together"
+  [a b]
+  (vec2 (+ (:x a) (:x b)) (+ (:y a) (:y b))))
+
+(def ^:const neighbourOffsets
+  [(vec2 -1 -1) (vec2 0 -1) (vec2 1 -1)
+   (vec2 -1  0)             (vec2 1  0) 
+   (vec2 -1  1) (vec2 0  1) (vec2 1  1)])
+
 (defn is-alive?
-  "Returns true if the cell at postition {x,y} exists and is alive in $WOLRD"
-  [world x y]
-  (when-let [row (get world y)]
-    (when-let [cell (get row x)]
+  "Returns true if the cell at postition {x,y} exists and is alive in
+  $WORLD"
+  [world point]
+  (when-let [row (get world (:y point))]
+    (when-let [cell (get row (:x point))]
       (= 1 cell))))
+
+(defn neighbour-coords
+  "Returns a list of vectors representing the coordinates of all
+  neighbours"
+  [point]
+  (map (partial addVec2 point) neighbourOffsets))
 
 (defn neighbour-map
   "Returns a list of booleans representing the living state of the 8
   neighbours of a given cell"
-  [world x y]
-  (map (partial is-alive? world)
-                [(- x 1) (- x 1) (- x 1) x x (+ x 1) (+ x 1) (+ x 1)]
-                [(- y 1) y (+ y 1) (- y 1) (+ y 1) (- y 1) y (+ y 1)]))
+  [world point]
+  (map neighbourOffsets)
+  (map (partial is-alive? world) (neighbour-coords point)))
 
 (defn count-alive-neighbours
   "Returns the number of alive neighbours a given cell in the world has"
   [world x y]
   (count
-   (filter identity (neighbour-map world x y))))
+   (filter identity (neighbour-map world (vec2 x y)))))
 
 (defn cell-step
   "Determines wether the cell survives, dies or comes to live
