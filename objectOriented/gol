@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+require './world'
+
+SLEEP = 0.4
+STEPS = 20
+WIDTH = 30
+HEIGHT = 30
+
+def printWorld world
+  world.cells.each do |row|
+    row.each do |cell|
+      print cell.alive? ? "x" : "." , " "
+    end
+    print "\n"
+  end
+  print "\n"
+end
+
+def randomizeWorld width, height
+  data = []
+  height.times do |y|
+    row = []
+    width.times do |x|
+      row << (rand(2) == 1 ? :alive : :dead)
+    end
+    data << row
+  end
+  data
+end
+
+data = randomizeWorld(WIDTH, HEIGHT)
+world = World.new data
+printWorld world
+sleep SLEEP
+
+STEPS.times do |i|
+  world.step
+  printWorld world
+  sleep SLEEP
+end
