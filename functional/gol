@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require './logic'
+
+SLEEP = 0.4
+STEPS = 20
+WIDTH = 30
+HEIGHT = 30
+
+def printWorld world
+  world.each do |row|
+    row.each do |cell|
+      print cell == 0 ? "." : "x" , " "
+    end
+    print "\n"
+  end
+end
+
+def randomizeWorld width, height
+  world = []
+  height.times do |y|
+    row = []
+    width.times do |x|
+      row << rand(2)
+    end
+    world << row
+  end
+  world
+end
+
+world = randomizeWorld WIDTH, HEIGHT
+printWorld world
+sleep SLEEP
+STEPS.times do ||
+  world = stepWorld world
+  printWorld world
+  print "\n"
+  sleep SLEEP
+end
